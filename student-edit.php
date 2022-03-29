@@ -1,32 +1,11 @@
 <?php include "header.php"; ?>
 <?php 
-// get data from dataabase
 if (isset($_GET['eid'])) {
   $sid = $_GET['eid'];
-  $sql = "SELECT * FROM students WHERE ID = $sid";
-  $result = $conn->query($sql);
-  if ($result->num_rows > 0) {
-     while ($row = $result->fetch_assoc()) { 
-      $sroll = $row['std_roll'];
-      $sreg = $row['std_reg'];
-      $syear = $row['std_year'];
-      $sname = $row['std_name'];
-      $saddr =$row['std_address'];
-      $scon = $row['std_contact'];
-      $semail = $row['std_email'];
-      $snote= $row['std_note'];
-     }
-   }
-}else{
-  header('location:index.php');
-}
 
+  // edit data
+  if (isset($_POST['std_update_btn'])) {
 
-
-// edit data
-  if (isset($_POST['std_reg_btn'])) {
-
-    $reg_datetime = date('Y-m-d H:i:s');
     $s_roll = $_POST['std_roll'];
     $s_reg_no = $_POST['std_reg'];
     $s_year = $_POST['std_year'];
@@ -35,7 +14,7 @@ if (isset($_GET['eid'])) {
     $s_contact_no = $_POST['std_contact_no'];
     $s_email = $_POST['std_email'];
     $s_note = $_POST['std_note'];
-    $s_status = 'active';
+    $s_status = $_POST['std_status'];
 
     // variable for photo upload
     $target_file = 'assets/images/uploads/' . $s_roll.'.jpg';
@@ -57,24 +36,45 @@ if (isset($_GET['eid'])) {
     
 
     // data insert
-    $sql = "INSERT INTO students(std_reg_date, std_roll, std_reg, std_year, std_name, std_address, std_contact, std_email, std_photo_url, std_note, std_status) VALUES ('$reg_datetime',  $s_roll, $s_reg_no, '$s_year', '$s_name', '$s_address', '$s_contact_no', '$s_email', '$target_file', '$s_note','$s_status')";
+    $sql = "UPDATE students SET std_roll=$s_roll, std_reg=$s_reg_no, std_year='$s_year', std_name='$s_name', std_address='$s_address', std_contact='$s_contact_no', std_email='$s_email', std_photo_url='$target_file', std_note='$s_note', std_status='$s_status' WHERE ID = $sid"; 
+
     
     if ($conn->query($sql) === true) {
-      // Check if $uploadOk is set to 0 by an error
       if ($uploadOk != 0) {
         move_uploaded_file($_FILES["std_photo"]["tmp_name"], $target_file);
       }
 
-      $msg = "New Student Registered";
+      $msg = "Student Data Updated!";
     }else{
-      $err = "Student Registation faild. Error:".$conn->error;
+      $err = "Data Update Faild. Error:".$conn->error;
     }
-
-
-
-
     
   }
+
+
+// get data from dataabase
+  $sql = "SELECT * FROM students WHERE ID = $sid";
+  $result = $conn->query($sql);
+  if ($result->num_rows > 0) {
+     while ($row = $result->fetch_assoc()) { 
+      $sroll = $row['std_roll'];
+      $sreg = $row['std_reg'];
+      $syear = $row['std_year'];
+      $sname = $row['std_name'];
+      $saddr =$row['std_address'];
+      $scon = $row['std_contact'];
+      $semail = $row['std_email'];
+      $snote= $row['std_note'];
+      $sphotoURL= $row['std_photo_url'];
+      $sstatus= $row['std_status'];
+     }
+   }
+}else{
+  header('location:index.php');
+}
+
+
+
 
  ?>
     <div class="container py-4">
@@ -84,6 +84,9 @@ if (isset($_GET['eid'])) {
 
       <div class="row d-flex justify-content-center">
        <div class="col-md-8">
+        <div class="text-center">
+          <div style="background: url(<?php echo $sphotoURL;?>);background-size: cover; width: 200px; height: 200px;border-radius: 50%;border: 5px solid #dadada; margin: 0px auto;"></div>
+        </div>
 
         <?php if (isset($msg)): ?>
         <div class="alert alert-success"><?php echo $msg; ?></div>
@@ -149,8 +152,19 @@ if (isset($_GET['eid'])) {
               <input type="file" name="std_photo" class="form-control-file mt-2" id="uploadphoto">
             </div>
 
+
+              <div class="form-group col-md-4 mt-4">
+                <label for="stdstatus">Status</label>
+                <select name="std_status" id="stdstatus" class="form-control" required>
+                  <option value="">Select Year</option>
+                  <option value="active" <?php echo $sstatus=='active'?'selected':''?>>Active</option>
+                  <option value="deactive" <?php echo $sstatus=='deactive'?'selected':''?>>Deactive</option>
+                  <option value="transferred" <?php echo $sstatus=='transferred'?'selected':''?>>Transferred</option>
+                </select>
+              </div>
+
             <div class="col-md-12 mt-4">
-              <input type="submit" name="std_reg_btn" class="btn btn-primary" value="Registratrion">
+              <input type="submit" name="std_update_btn" class="btn btn-primary" value="Registratrion">
             </div>
           </form>
        </div>

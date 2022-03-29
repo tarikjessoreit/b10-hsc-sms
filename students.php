@@ -41,7 +41,7 @@
                       <td><?php echo $row['std_email'];?></td>
                       <td>
                         <a href="student-edit.php?eid=<?php echo $row['ID'];?>" class="btn btn-sm btn-success"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                        <a href="delete.php?did=<?php echo $row['ID'];?>" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                       </td>
                   </tr>
                   <?php 

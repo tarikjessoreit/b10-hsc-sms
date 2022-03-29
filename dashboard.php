@@ -8,21 +8,21 @@
         <div class="col-md-4">
           <div class="card p-3">
              <div class="h5 border-bottom pb-2">Total Students</div>
-          <div class="h1">120</div>
+          <div class="h1"><?php echo count_students(); ?></div>
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="card p-3">
-             <div class="h5 border-bottom pb-2">Total Students</div>
-          <div class="h1">120</div>
+             <div class="h5 border-bottom pb-2">1st Year Students</div>
+          <div class="h1"><?php echo count_1st_year_students(); ?></div>
           </div>
         </div>
         
         <div class="col-md-4">
           <div class="card p-3">
-             <div class="h5 border-bottom pb-2">Total Students</div>
-          <div class="h1">120</div>
+             <div class="h5 border-bottom pb-2">2nd Year Students</div>
+          <div class="h1"><?php echo count_2nd_year_students(); ?></div>
           </div>
         </div>
       </div><!--/students count-->
@@ -35,6 +35,7 @@
               <thead>
                   <tr>
                       <th>ID</th>
+                      <th>Photo</th>
                       <th>Roll</th>
                       <th>Reg. No.</th>
                       <th>Year</th>
@@ -46,25 +47,37 @@
                   </tr>
               </thead>
               <tbody>
+                <?php 
+                $sql = "SELECT * FROM students";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) { ?>
                   <tr>
-                      <td>01</td>
-                      <td>202201</td>
-                      <td>123456</td>
-                      <td>2nd</td>
-                      <td>Mr. Moksed</td>
-                      <td>jessore</td>
-                      <td>0177777777</td>
-                      <td>abcde@test.com</td>
+                      <td><?php echo $row['ID'];?></td>
+                      <td><img src="<?php echo $row['std_photo_url'];?>" alt="" style="max-height: 50px;"></td>
+                      <td><?php echo $row['std_roll'];?></td>
+                      <td><?php echo $row['std_reg'];?></td>
+                      <td><?php echo $row['std_year'];?></td>
+                      <td><?php echo $row['std_name'];?></td>
+                      <td><?php echo $row['std_address'];?></td>
+                      <td><?php echo $row['std_contact'];?></td>
+                      <td><?php echo $row['std_email'];?></td>
                       <td>
-                        <a href="#" class="btn btn-sm btn-success"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+                        <a href="student-edit.php?eid=<?php echo $row['ID'];?>" class="btn btn-sm btn-success"><i class="fa fa-edit"></i></a>
+                        <a href="delete.php?did=<?php echo $row['ID'];?>" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                       </td>
                   </tr>
+                  <?php 
+                  }
+                }
+
+                 ?>
               </tbody>
               <tfoot>
                 <thead>
                   <tr>
                       <th>ID</th>
+                      <th>Photo</th>
                       <th>Roll</th>
                       <th>Reg. No.</th>
                       <th>Year</th>
