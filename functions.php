@@ -18,3 +18,13 @@ function count_2nd_year_students(){
     $conn->query("SELECT * FROM students WHERE std_year = '2nd'");
     return $conn -> affected_rows;
 }
+
+
+// check login user
+function islogin(){
+    if (isset($_SESSION['LogStatus']) && $_SESSION['LogStatus'] === true) {
+        return true;
+    }else{
+        return false;
+    }
+}

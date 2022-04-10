@@ -1,5 +1,6 @@
 <?php include "config.php"; ?>
 <?php include "functions.php"; ?>
+<?php if (islogin() === false) {header('location:index.php');} ?>
 <!doctype html>
 <html lang="en">
   <head>

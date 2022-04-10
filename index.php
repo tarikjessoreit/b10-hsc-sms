@@ -1,4 +1,36 @@
 <?php include "config.php"; ?>
+<?php 
+  if (isset($_SESSION['LogStatus']) && $_SESSION['LogStatus'] === true) {
+    header('location:dashboard.php');
+  }
+
+ ?>
+<?php 
+  if (isset($_POST['loginbtn'])) {
+    $userName = $_POST['uname'];
+    $password = md5($_POST['upass']);
+
+     $sql = "SELECT * FROM users WHERE username = '$userName' And userpassword = '$password'";
+      $result = $conn->query($sql);
+      if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $uRulse = $row['user_rules'];
+        $_SESSION['LogStatus'] = true;
+        $_SESSION['username'] = $userName;
+        $_SESSION['userRulse'] = $uRulse;
+        header('location:dashboard.php');
+
+        $msg = "Login Successfull";
+
+      }else{
+        $err = "Wrong Username & Password. Plase Try Again!";
+      }
+
+
+  }
+
+ ?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -16,8 +48,15 @@
     <div class="container col-4 card p-3">
       <div class="row">
         <div class="col-md-12">
+        <?php if (isset($msg)): ?>
+        <div class="alert alert-success"><?php echo $msg; ?></div>
+        <?php endif ?>
+
+        <?php if (isset($err)){?>
+        <div class="alert alert-danger"><?php echo $err; ?></div>
+        <?php } ?>
           <div class="h2 text-center mb-3">Please Login</div>
-          <form method="" action="dashboard.php">
+          <form method="post" action="">
             <div class="mb-3">
               <label for="username" class="form-label">Username</label>
               <input type="text" name="uname" class="form-control" id="username">
